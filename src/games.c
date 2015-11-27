@@ -81,7 +81,8 @@ int igraph_i_barabasi_game_psumtree(igraph_t *graph,
 				    igraph_bool_t outpref,
 				    igraph_real_t A,
 				    igraph_bool_t directed,
-				    const igraph_t *start_from);
+				    const igraph_t *start_from,
+                                    igraph_rng_t *rng);
 
 int igraph_i_barabasi_game_bag(igraph_t *graph, igraph_integer_t n, 
 			       igraph_integer_t m, 
@@ -302,7 +303,8 @@ int igraph_i_barabasi_game_psumtree(igraph_t *graph,
 				    igraph_bool_t outpref,
 				    igraph_real_t A,
 				    igraph_bool_t directed,
-				    const igraph_t *start_from) {
+				    const igraph_t *start_from,
+                                    igraph_rng_t *rng) {
 
   long int no_of_nodes=n;
   long int no_of_neighbors=m;
@@ -378,7 +380,7 @@ int igraph_i_barabasi_game_psumtree(igraph_t *graph,
     } else {
       for (j=0; j<no_of_neighbors; j++) {
 	sum=igraph_psumtree_sum(&sumtree);
-	igraph_psumtree_search(&sumtree, &to, RNG_UNIF(0, sum));
+	igraph_psumtree_search(&sumtree, &to, igraph_rng_get_unif(rng, 0, sum));
 	VECTOR(degree)[to]++;
 	igraph_vector_push_back(&edges, i);
 	igraph_vector_push_back(&edges, to);
@@ -491,7 +493,8 @@ int igraph_barabasi_game(igraph_t *graph, igraph_integer_t n,
 			 igraph_real_t A,
 			 igraph_bool_t directed,
 			 igraph_barabasi_algorithm_t algo,
-			 const igraph_t *start_from) {
+			 const igraph_t *start_from,
+                         igraph_rng_t *rng) {
 
   long int start_nodes= start_from ? igraph_vcount(start_from) : 0;
   long int newn= start_from ? n-start_nodes : n;
@@ -556,7 +559,7 @@ int igraph_barabasi_game(igraph_t *graph, igraph_integer_t n,
 				      start_from);
   } else if (algo == IGRAPH_BARABASI_PSUMTREE) {
     return igraph_i_barabasi_game_psumtree(graph, n, power, m, outseq, 
-					   outpref, A, directed, start_from);
+					   outpref, A, directed, start_from, rng);
   } else if (algo == IGRAPH_BARABASI_PSUMTREE_MULTIPLE) {
     return igraph_i_barabasi_game_psumtree_multiple(graph, n, power, m, 
 						    outseq, outpref, A, 

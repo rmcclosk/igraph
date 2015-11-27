@@ -40,6 +40,7 @@
 #include "igraph_vector.h"
 #include "igraph_datatype.h"
 #include "igraph_vector_ptr.h"
+#include "igraph_random.h"
 
 __BEGIN_DECLS
 
@@ -55,7 +56,8 @@ int igraph_barabasi_game(igraph_t *graph, igraph_integer_t n,
 			 igraph_real_t A,
 			 igraph_bool_t directed,
 			 igraph_barabasi_algorithm_t algo,
-			 const igraph_t *start_from);
+			 const igraph_t *start_from,
+             igraph_rng_t *rng);
 int igraph_nonlinear_barabasi_game(igraph_t *graph, igraph_integer_t n,
 				   igraph_real_t power,
 				   igraph_integer_t m,  
