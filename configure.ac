@@ -2,6 +2,7 @@ AC_INIT(igraph, esyscmd([tr -d '\n' < VERSION]), csardi.gabor@gmail.com)
 AC_CONFIG_SRCDIR(src/games.c)
 AM_INIT_AUTOMAKE([foreign subdir-objects])
 AC_CONFIG_HEADERS([config.h])
+AC_CONFIG_MACRO_DIR([m4])
 
 m4_include(tools/autoconf/ax_tls.m4)
 m4_include(tools/autoconf/as-version.m4)
