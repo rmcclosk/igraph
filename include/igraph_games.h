@@ -67,11 +67,14 @@ int igraph_nonlinear_barabasi_game(igraph_t *graph, igraph_integer_t n,
 				   igraph_bool_t directed);
 int igraph_erdos_renyi_game(igraph_t *graph, igraph_erdos_renyi_t type,
 			    igraph_integer_t n, igraph_real_t p,
-			    igraph_bool_t directed, igraph_bool_t loops);
+			    igraph_bool_t directed, igraph_bool_t loops,
+                igraph_rng_t *rng);
 int igraph_erdos_renyi_game_gnp(igraph_t *graph, igraph_integer_t n, igraph_real_t p,
-				igraph_bool_t directed, igraph_bool_t loops);
+				igraph_bool_t directed, igraph_bool_t loops,
+                igraph_rng_t *rng);
 int igraph_erdos_renyi_game_gnm(igraph_t *graph, igraph_integer_t n, igraph_real_t m,
-				igraph_bool_t directed, igraph_bool_t loops);
+				igraph_bool_t directed, igraph_bool_t loops,
+                igraph_rng_t *rng);
 int igraph_degree_sequence_game(igraph_t *graph, const igraph_vector_t *out_deg,
 				const igraph_vector_t *in_deg, 
 				igraph_degseq_t method);
@@ -138,11 +141,13 @@ int igraph_asymmetric_preference_game(igraph_t *graph, igraph_integer_t nodes,
 				      igraph_bool_t loops);
 
 int igraph_rewire_edges(igraph_t *graph, igraph_real_t prob, 
-			igraph_bool_t loops, igraph_bool_t multiple);
+			igraph_bool_t loops, igraph_bool_t multiple,
+            igraph_rng_t *rng);
 int igraph_watts_strogatz_game(igraph_t *graph, igraph_integer_t dim,
 			       igraph_integer_t size, igraph_integer_t nei,
 			       igraph_real_t p, igraph_bool_t loops, 
-			       igraph_bool_t multiple);
+			       igraph_bool_t multiple,
+                   igraph_rng_t *rng);
 
 int igraph_lastcit_game(igraph_t *graph, 
 			igraph_integer_t nodes, igraph_integer_t edges_per_node, 

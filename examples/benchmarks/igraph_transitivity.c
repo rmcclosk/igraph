@@ -34,7 +34,8 @@ int main() {
 	igraph_vector_t trans;
 
 	igraph_erdos_renyi_game(&g, IGRAPH_ERDOS_RENYI_GNM, N, M,
-													IGRAPH_UNDIRECTED, IGRAPH_NO_LOOPS);
+													IGRAPH_UNDIRECTED, IGRAPH_NO_LOOPS,
+                                                    igraph_rng_default());
 	igraph_vector_init(&trans, igraph_vcount(&g));	
 
 	BENCH("1 Transitivity GNM   ",

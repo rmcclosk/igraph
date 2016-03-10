@@ -1006,7 +1006,7 @@ int igraph_bipartite_game_gnm(igraph_t *graph, igraph_vector_bool_t *types,
       long int to, from;
       IGRAPH_VECTOR_INIT_FINALLY(&edges, 0);
       IGRAPH_VECTOR_INIT_FINALLY(&s, 0);
-      IGRAPH_CHECK(igraph_random_sample(&s, 0, maxedges-1, m));
+      IGRAPH_CHECK(igraph_random_sample(&s, 0, maxedges-1, m, igraph_rng_default()));
       IGRAPH_CHECK(igraph_vector_reserve(&edges, igraph_vector_size(&s)*2));
 
       for (i=0; i<m; i++) {

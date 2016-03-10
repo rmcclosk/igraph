@@ -499,7 +499,7 @@ int igraph_motifs_randesu_estimate(const igraph_t *graph, igraph_integer_t *est,
     }
     IGRAPH_FINALLY(igraph_free, sample);
     IGRAPH_VECTOR_INIT_FINALLY(sample, 0);  
-    IGRAPH_CHECK(igraph_random_sample(sample, 0, no_of_nodes-1, sample_size));
+    IGRAPH_CHECK(igraph_random_sample(sample, 0, no_of_nodes-1, sample_size, igraph_rng_default()));
   } else {
     sample=(igraph_vector_t*)parsample;
     sample_size=(igraph_integer_t) igraph_vector_size(sample);

@@ -61,7 +61,8 @@ int igraph_i_barabasi_game_bag(igraph_t *graph, igraph_integer_t n,
 			       const igraph_vector_t *outseq, 
 			       igraph_bool_t outpref, 
 			       igraph_bool_t directed, 
-			       const igraph_t *start_from);
+			       const igraph_t *start_from,
+                               igraph_rng_t *rng);
 
 int igraph_i_barabasi_game_psumtree_multiple(igraph_t *graph, 
 					     igraph_integer_t n,
@@ -71,7 +72,8 @@ int igraph_i_barabasi_game_psumtree_multiple(igraph_t *graph,
 					     igraph_bool_t outpref,
 					     igraph_real_t A,
 					     igraph_bool_t directed, 
-					     const igraph_t *start_from);
+					     const igraph_t *start_from,
+                                             igraph_rng_t *rng);
 
 int igraph_i_barabasi_game_psumtree(igraph_t *graph, 
 				    igraph_integer_t n,
@@ -89,7 +91,8 @@ int igraph_i_barabasi_game_bag(igraph_t *graph, igraph_integer_t n,
 			       const igraph_vector_t *outseq, 
 			       igraph_bool_t outpref, 
 			       igraph_bool_t directed, 
-			       const igraph_t *start_from) {
+			       const igraph_t *start_from,
+                               igraph_rng_t *rng) {
 
   long int no_of_nodes=n;
   long int no_of_neighbors=m;
@@ -155,8 +158,6 @@ int igraph_i_barabasi_game_bag(igraph_t *graph, igraph_integer_t n,
     igraph_vector_resize(&edges, no_of_edges * 2);
   }
   
-  RNG_BEGIN();
-
   /* and the others */
   
   for (i=(start_from ? start_nodes : 1), k=(start_from ? 0 : 1); 
@@ -164,7 +165,7 @@ int igraph_i_barabasi_game_bag(igraph_t *graph, igraph_integer_t n,
     /* draw edges */
     if (outseq) { no_of_neighbors=(long int) VECTOR(*outseq)[k]; }
     for (j=0; j<no_of_neighbors; j++) {
-      long int to=bag[RNG_INTEGER(0, bagp-1)];
+      long int to=bag[igraph_rng_get_integer(rng, 0, bagp-1)];
       VECTOR(edges)[resp++] = i;
       VECTOR(edges)[resp++] = to;
     }
@@ -177,8 +178,6 @@ int igraph_i_barabasi_game_bag(igraph_t *graph, igraph_integer_t n,
       }
     }
   }
-
-  RNG_END();
 
   igraph_Free(bag);
   IGRAPH_CHECK(igraph_create(graph, &edges, (igraph_integer_t) no_of_nodes, 
@@ -197,7 +196,8 @@ int igraph_i_barabasi_game_psumtree_multiple(igraph_t *graph,
 					     igraph_bool_t outpref,
 					     igraph_real_t A,
 					     igraph_bool_t directed, 
-					     const igraph_t *start_from) {
+					     const igraph_t *start_from,
+                                             igraph_rng_t *rng) {
 
   long int no_of_nodes=n;
   long int no_of_neighbors=m;
@@ -251,8 +251,6 @@ int igraph_i_barabasi_game_psumtree_multiple(igraph_t *graph,
     igraph_vector_resize(&edges, no_of_edges * 2);
   }
 
-  RNG_BEGIN();
-
   /* and the rest */
   for (i=(start_from ? start_nodes : 1), k=(start_from ? 0 : 1); 
        i<no_of_nodes; i++, k++) {
@@ -262,7 +260,7 @@ int igraph_i_barabasi_game_psumtree_multiple(igraph_t *graph,
       no_of_neighbors=(long int) VECTOR(*outseq)[k];
     }
     for (j=0; j<no_of_neighbors; j++) {
-      igraph_psumtree_search(&sumtree, &to, RNG_UNIF(0, sum));
+      igraph_psumtree_search(&sumtree, &to, igraph_rng_get_unif(rng, 0, sum));
       VECTOR(degree)[to]++;
       VECTOR(edges)[edgeptr++] = i;
       VECTOR(edges)[edgeptr++] = to;
@@ -281,8 +279,6 @@ int igraph_i_barabasi_game_psumtree_multiple(igraph_t *graph,
       igraph_psumtree_update(&sumtree, i, A);
     }
   }
-  
-  RNG_END();
 
   igraph_psumtree_destroy(&sumtree);
   igraph_vector_destroy(&degree);
@@ -338,8 +334,6 @@ int igraph_i_barabasi_game_psumtree(igraph_t *graph,
   IGRAPH_CHECK(igraph_psumtree_init(&sumtree, no_of_nodes));
   IGRAPH_FINALLY(igraph_psumtree_destroy, &sumtree);
   IGRAPH_VECTOR_INIT_FINALLY(&degree, no_of_nodes);
-  
-  RNG_BEGIN();
   
   /* first node(s) */
   if (start_from) {    
@@ -402,8 +396,6 @@ int igraph_i_barabasi_game_psumtree(igraph_t *graph,
       igraph_psumtree_update(&sumtree, i, A);
     }
   }
-  
-  RNG_END();
 
   igraph_psumtree_destroy(&sumtree);
   igraph_vector_destroy(&degree);
@@ -474,6 +466,7 @@ int igraph_i_barabasi_game_psumtree(igraph_t *graph,
  *        graph is supplied here and the \p outseq argument is also
  *        given, then \p outseq should only contain information on the
  *        vertices that are not in the \p start_from graph.
+ * \param rng random number generator
  * \return Error code:
  *         \c IGRAPH_EINVAL: invalid \p n,
  *         \p m or \p outseq parameter.
@@ -556,14 +549,14 @@ int igraph_barabasi_game(igraph_t *graph, igraph_integer_t n,
 
   if (algo == IGRAPH_BARABASI_BAG) {
     return igraph_i_barabasi_game_bag(graph, n, m, outseq, outpref, directed, 
-				      start_from);
+				      start_from, rng);
   } else if (algo == IGRAPH_BARABASI_PSUMTREE) {
     return igraph_i_barabasi_game_psumtree(graph, n, power, m, outseq, 
 					   outpref, A, directed, start_from, rng);
   } else if (algo == IGRAPH_BARABASI_PSUMTREE_MULTIPLE) {
     return igraph_i_barabasi_game_psumtree_multiple(graph, n, power, m, 
 						    outseq, outpref, A, 
-						    directed, start_from);
+						    directed, start_from, rng);
   }
 					   
   return 0;
@@ -574,7 +567,8 @@ int igraph_barabasi_game(igraph_t *graph, igraph_integer_t n,
  */
 
 int igraph_erdos_renyi_game_gnp(igraph_t *graph, igraph_integer_t n, igraph_real_t p,
-				igraph_bool_t directed, igraph_bool_t loops) {
+				igraph_bool_t directed, igraph_bool_t loops,
+                                igraph_rng_t *rng) {
 
   long int no_of_nodes=n;
   igraph_vector_t edges=IGRAPH_VECTOR_NULL;
@@ -608,16 +602,12 @@ int igraph_erdos_renyi_game_gnp(igraph_t *graph, igraph_integer_t n, igraph_real
     IGRAPH_VECTOR_INIT_FINALLY(&s, 0);
     IGRAPH_CHECK(igraph_vector_reserve(&s, (long int) (maxedges*p*1.1)));
 
-    RNG_BEGIN();
-
-    last=RNG_GEOM(p);
+    last=igraph_rng_get_geom(rng, p);
     while (last < maxedges) {
       IGRAPH_CHECK(igraph_vector_push_back(&s, last));
-      last += RNG_GEOM(p);
+      last += igraph_rng_get_geom(rng, p);
       last += 1;
     }
-
-    RNG_END();
 
     IGRAPH_VECTOR_INIT_FINALLY(&edges, 0);
     IGRAPH_CHECK(igraph_vector_reserve(&edges, igraph_vector_size(&s)*2));
@@ -666,7 +656,8 @@ int igraph_erdos_renyi_game_gnp(igraph_t *graph, igraph_integer_t n, igraph_real
 }
 
 int igraph_erdos_renyi_game_gnm(igraph_t *graph, igraph_integer_t n, igraph_real_t m,
-				igraph_bool_t directed, igraph_bool_t loops) {
+				igraph_bool_t directed, igraph_bool_t loops,
+                                igraph_rng_t *rng) {
 
   igraph_integer_t no_of_nodes=n;
   igraph_integer_t no_of_edges=(igraph_integer_t) m;
@@ -708,7 +699,8 @@ int igraph_erdos_renyi_game_gnm(igraph_t *graph, igraph_integer_t n, igraph_real
       
       IGRAPH_VECTOR_INIT_FINALLY(&s, 0);
       IGRAPH_CHECK(igraph_random_sample(&s, 0, maxedges-1, 
-					(igraph_integer_t) no_of_edges));
+					(igraph_integer_t) no_of_edges,
+                                        rng));
       
       IGRAPH_VECTOR_INIT_FINALLY(&edges, 0);
       IGRAPH_CHECK(igraph_vector_reserve(&edges, igraph_vector_size(&s)*2));
@@ -783,6 +775,7 @@ int igraph_erdos_renyi_game_gnm(igraph_t *graph, igraph_integer_t n, igraph_real
  *        parameter for G(n,m) graphs.
  * \param directed Logical, whether to generate a directed graph.
  * \param loops Logical, whether to generate loops (self) edges.
+ * \param rng random number generator
  * \return Error code:
  *         \c IGRAPH_EINVAL: invalid
  *         \p type, \p n,
@@ -801,12 +794,13 @@ int igraph_erdos_renyi_game_gnm(igraph_t *graph, igraph_integer_t n, igraph_real
 
 int igraph_erdos_renyi_game(igraph_t *graph, igraph_erdos_renyi_t type,
 			    igraph_integer_t n, igraph_real_t p_or_m,
-			    igraph_bool_t directed, igraph_bool_t loops) {
+			    igraph_bool_t directed, igraph_bool_t loops,
+                            igraph_rng_t *rng) {
   int retval=0;
   if (type == IGRAPH_ERDOS_RENYI_GNP) {
-    retval=igraph_erdos_renyi_game_gnp(graph, n, p_or_m, directed, loops);
+    retval=igraph_erdos_renyi_game_gnp(graph, n, p_or_m, directed, loops, rng);
   } else if (type == IGRAPH_ERDOS_RENYI_GNM) {
-    retval=igraph_erdos_renyi_game_gnm(graph, n, p_or_m, directed, loops);
+    retval=igraph_erdos_renyi_game_gnm(graph, n, p_or_m, directed, loops, rng);
   } else {
     IGRAPH_ERROR("Invalid type", IGRAPH_EINVAL);
   }
@@ -1519,7 +1513,7 @@ int igraph_establishment_game(igraph_t *graph, igraph_integer_t nodes,
 
   for (i=k; i<nodes; i++) {    
     long int type1=(long int) VECTOR(nodetypes)[i];
-    igraph_random_sample(&potneis, 0, i-1, k);
+    igraph_random_sample(&potneis, 0, i-1, k, igraph_rng_default());
     for (j=0; j<k; j++) {
       long int type2=(long int) VECTOR(nodetypes)[(long int)VECTOR(potneis)[j]];
       if (RNG_UNIF01() < MATRIX(*pref_matrix, type1, type2)) {
@@ -2835,6 +2829,7 @@ int igraph_i_rewire_edges_no_multiple(igraph_t *graph, igraph_real_t prob,
  *    graph, or not.
  * \param multiple Boolean, whether multiple edges are allowed in the 
  *    new graph.
+ * \param rng random number generator
  * \return Error code.
  * 
  * \sa \ref igraph_watts_strogatz_game() uses this function for the
@@ -2844,7 +2839,8 @@ int igraph_i_rewire_edges_no_multiple(igraph_t *graph, igraph_real_t prob,
  */
 
 int igraph_rewire_edges(igraph_t *graph, igraph_real_t prob, 
-			igraph_bool_t loops, igraph_bool_t multiple) {
+			igraph_bool_t loops, igraph_bool_t multiple,
+                        igraph_rng_t *rng) {
 
   igraph_t newgraph;
   long int no_of_edges=igraph_ecount(graph);
@@ -2865,8 +2861,6 @@ int igraph_rewire_edges(igraph_t *graph, igraph_real_t prob,
     
   IGRAPH_VECTOR_INIT_FINALLY(&edges, endpoints);
     
-  RNG_BEGIN();
-
   if (prob != 0 && no_of_edges > 0) {
     if (multiple) {      
       /* If multiple edges are allowed, then there is an easy and fast
@@ -2874,17 +2868,17 @@ int igraph_rewire_edges(igraph_t *graph, igraph_real_t prob,
 	 so the "skips" between the really rewired endpoints follow a 
 	 geometric distribution. */
       IGRAPH_CHECK(igraph_get_edgelist(graph, &edges, 0));
-      to_rewire=(long int) RNG_GEOM(prob);
+      to_rewire=(long int) igraph_rng_get_geom(rng, prob);
       while (to_rewire < endpoints) {
 	if (loops) {
-	  VECTOR(edges)[to_rewire] = RNG_INTEGER(0, no_of_nodes-1);
+	  VECTOR(edges)[to_rewire] = igraph_rng_get_integer(rng, 0, no_of_nodes-1);
 	} else {
 	  long int opos = to_rewire % 2 ? to_rewire-1 : to_rewire+1;
 	  long int nei= (long int) VECTOR(edges)[opos];
 	  long int r=RNG_INTEGER(0, no_of_nodes-2);
 	  VECTOR(edges)[ to_rewire ] = (r != nei ? r : no_of_nodes-1);
 	}
-	to_rewire += RNG_GEOM(prob)+1;
+	to_rewire += igraph_rng_get_geom(rng, prob)+1;
       }
 
     } else {
@@ -2893,8 +2887,6 @@ int igraph_rewire_edges(igraph_t *graph, igraph_real_t prob,
     }
   }
   
-  RNG_END();
-
   IGRAPH_CHECK(igraph_create(&newgraph, &edges, (igraph_integer_t) no_of_nodes, 
 			     igraph_is_directed(graph)));
   igraph_vector_destroy(&edges);
@@ -2933,6 +2925,7 @@ int igraph_rewire_edges(igraph_t *graph, igraph_real_t prob,
  * \param loops Logical, whether to generate loop edges.
  * \param multiple Logical, whether to allow multiple edges in the
  *   generated graph.
+ * \param rng random number generator
  * \return Error code.
  * 
  * \sa \ref igraph_lattice(), \ref igraph_connect_neighborhood() and
@@ -2947,7 +2940,8 @@ int igraph_rewire_edges(igraph_t *graph, igraph_real_t prob,
 int igraph_watts_strogatz_game(igraph_t *graph, igraph_integer_t dim,
 			       igraph_integer_t size, igraph_integer_t nei,
 			       igraph_real_t p, igraph_bool_t loops, 
-			       igraph_bool_t multiple) {
+			       igraph_bool_t multiple,
+                               igraph_rng_t *rng) {
   
   igraph_vector_t dimvector;
   long int i;
@@ -2979,7 +2973,7 @@ int igraph_watts_strogatz_game(igraph_t *graph, igraph_integer_t dim,
   
   /* Rewire the edges then */
 
-  IGRAPH_CHECK(igraph_rewire_edges(graph, p, loops, multiple));
+  IGRAPH_CHECK(igraph_rewire_edges(graph, p, loops, multiple, rng));
 
   IGRAPH_FINALLY_CLEAN(1);
   return 0;
@@ -3945,7 +3939,7 @@ int igraph_correlated_game(const igraph_t *old_graph, igraph_t *new_graph,
   if (corr == 0) {
     return igraph_erdos_renyi_game(new_graph, IGRAPH_ERDOS_RENYI_GNP,
 				   no_of_nodes, p, directed,
-				   IGRAPH_NO_LOOPS);
+				   IGRAPH_NO_LOOPS, igraph_rng_default());
   }
   if (corr == 1) {
     /* We don't copy, because we don't need the attributes.... */
@@ -4129,7 +4123,7 @@ int igraph_correlated_pair_game(igraph_t *graph1, igraph_t *graph2,
 				const igraph_vector_t *permutation) {
 
   IGRAPH_CHECK(igraph_erdos_renyi_game(graph1, IGRAPH_ERDOS_RENYI_GNP, n, p,
-				       directed, IGRAPH_NO_LOOPS));
+				       directed, IGRAPH_NO_LOOPS, igraph_rng_default()));
   IGRAPH_CHECK(igraph_correlated_game(graph1, graph2, corr, p, permutation));
   return 0;
 }

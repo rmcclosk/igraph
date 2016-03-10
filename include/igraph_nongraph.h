@@ -38,6 +38,7 @@
 #include "igraph_matrix.h"
 #include "igraph_types.h"
 #include "igraph_vector.h"
+#include "igraph_random.h"
 
 __BEGIN_DECLS
 
@@ -83,7 +84,7 @@ int igraph_running_mean(const igraph_vector_t *data, igraph_vector_t *res,
 			igraph_integer_t binwidth);
 int igraph_fisher_yates_shuffle(igraph_vector_t *seq);
 int igraph_random_sample(igraph_vector_t *res, igraph_real_t l, igraph_real_t h, 
-			 igraph_integer_t length);
+			 igraph_integer_t length, igraph_rng_t *rng);
 int igraph_convex_hull(const igraph_matrix_t *data, igraph_vector_t *resverts,
 		       igraph_matrix_t *rescoords);
 int igraph_zeroin(igraph_real_t *ax, igraph_real_t *bx,

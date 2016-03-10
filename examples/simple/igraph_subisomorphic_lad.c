@@ -36,7 +36,8 @@ void test_motifs() {
 
     igraph_rng_seed(igraph_rng_default(), 42);
 
-    igraph_erdos_renyi_game_gnm(&graph, 40, 400, /* directed = */ 1, /* loops = */ 0);
+    igraph_erdos_renyi_game_gnm(&graph, 40, 400, /* directed = */ 1, /* loops = */ 0,
+                                igraph_rng_default());
     vcount = igraph_vcount(&graph);
 
     /* 3-motifs */

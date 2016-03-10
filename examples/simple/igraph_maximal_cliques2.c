@@ -82,7 +82,8 @@ int main() {
 
   igraph_erdos_renyi_game(&graph, IGRAPH_ERDOS_RENYI_GNP, 
 			  /*n=*/ 50, /*p=*/ 0.5, /*directed=*/ 0,
-			  /*loops=*/ 0);
+			  /*loops=*/ 0,
+              igraph_rng_default());
   igraph_vector_ptr_init(&cliques, 0);
   
   igraph_maximal_cliques(&graph, &cliques, /*min_size=*/ 8,

@@ -50,7 +50,7 @@ int check_simple() {
 
   for (r=0; r<runs; r++) {
     igraph_erdos_renyi_game(&g, IGRAPH_ERDOS_RENYI_GNP, nodes, p, 
-			    /*directed=*/ 0, /*loops=*/ 0);
+			    /*directed=*/ 0, /*loops=*/ 0, igraph_rng_default());
     ecount=igraph_ecount(&g);
     for (e=0; e<edges; e++) {
       long int edge=RNG_INTEGER(0, ecount-1);
@@ -169,11 +169,11 @@ int check_multi() {
   igraph_barabasi_game(&g, /*n=*/ NODES, /*power=*/ 1.0, /*m=*/ 3, 
 		       /*outseq=*/ 0, /*outpref=*/ 0, /*A=*/ 1,
 		       /*directed=*/ 1, IGRAPH_BARABASI_BAG,
-		       /*start_from=*/ 0);
+		       /*start_from=*/ 0, igraph_rng_default());
   igraph_simplify(&g, /*multiple=*/ 1, /*loops=*/ 0, /*edge_comb=*/ 0);
 
   igraph_vector_init(&eids, NODES/2);
-  igraph_random_sample(&eids, 0, igraph_ecount(&g)-1, NODES/2);
+  igraph_random_sample(&eids, 0, igraph_ecount(&g)-1, NODES/2, igraph_rng_default());
   igraph_vector_init(&vec, NODES);
   for (i=0; i<NODES/2; i++) {
     VECTOR(vec)[2*i]   = IGRAPH_FROM(&g, VECTOR(eids)[i]);

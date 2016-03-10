@@ -977,7 +977,7 @@ float rintf (float x)
  */
 
 int igraph_i_random_sample_alga(igraph_vector_t *res, igraph_integer_t l, igraph_integer_t h, 
-			      igraph_integer_t length) {
+			      igraph_integer_t length, igraph_rng_t *rng) {
   igraph_real_t N=h-l+1;
   igraph_real_t n=length;
   
@@ -989,7 +989,7 @@ int igraph_i_random_sample_alga(igraph_vector_t *res, igraph_integer_t l, igraph
   l=l-1;
 
   while (n>=2) {
-    V=RNG_UNIF01();
+    V=igraph_rng_get_unif01(rng);
     S=1;
     quot=top/Nreal;
     while (quot>V) {
@@ -1003,7 +1003,7 @@ int igraph_i_random_sample_alga(igraph_vector_t *res, igraph_integer_t l, igraph
     Nreal=-1.0+Nreal; n=-1+n;
   }
   
-  S=floor(round(Nreal)*RNG_UNIF01());
+  S=floor(round(Nreal)*igraph_rng_get_unif01(rng));
   l+=S+1;
   igraph_vector_push_back(res, l);	/* allocated */
   
@@ -1037,6 +1037,7 @@ int igraph_i_random_sample_alga(igraph_vector_t *res, igraph_integer_t l, igraph
  *        be greater than or equal to the lower limit, and it must be integral.
  *        Passing a fractional number here results in undefined behaviour.
  * \param length The number of random integers to generate.
+ * \param rng random number generator
  * \return The error code \c IGRAPH_EINVAL is returned in each of the
  *         following cases: (1) The given lower limit is greater than the
  *         given upper limit, i.e. \c l &gt; \c h. (2) Assuming that
@@ -1059,7 +1060,7 @@ int igraph_i_random_sample_alga(igraph_vector_t *res, igraph_integer_t l, igraph
  */
 
 int igraph_random_sample(igraph_vector_t *res, igraph_real_t l, igraph_real_t h, 
-			 igraph_integer_t length) {
+			 igraph_integer_t length, igraph_rng_t *rng) {
   igraph_real_t N=h-l+1;
   igraph_real_t n=length;
   int retval;
@@ -1099,9 +1100,7 @@ int igraph_random_sample(igraph_vector_t *res, igraph_real_t l, igraph_real_t h,
   igraph_vector_clear(res);
   IGRAPH_CHECK(igraph_vector_reserve(res, length));  
 
-  RNG_BEGIN();
-  
-  Vprime=exp(log(RNG_UNIF01())*ninv);
+  Vprime=exp(log(igraph_rng_get_unif01(rng))*ninv);
   l=l-1;
 
   while (n>1 && threshold < N) {
@@ -1115,9 +1114,9 @@ int igraph_random_sample(igraph_vector_t *res, igraph_real_t l, igraph_real_t h,
 	S=floor(X);
 	// if (S==0) { S=1; }
 	if (S <qu1) { break; }
-	Vprime = exp(log(RNG_UNIF01())*ninv);
+	Vprime = exp(log(igraph_rng_get_unif01(rng))*ninv);
       }
-      U=RNG_UNIF01();
+      U=igraph_rng_get_unif01(rng);
       negSreal=-S;
       
       y1=exp(log(U*Nreal/qu1real)*nmin1inv);
@@ -1139,10 +1138,10 @@ int igraph_random_sample(igraph_vector_t *res, igraph_real_t l, igraph_real_t h,
 	bottom=-1.0+bottom;
       }
       if (Nreal/(-X+Nreal) >= y1*exp(log(y2)*nmin1inv)) {
-	Vprime=exp(log(RNG_UNIF01())*nmin1inv);
+	Vprime=exp(log(igraph_rng_get_unif01(rng))*nmin1inv);
 	break;
       }
-      Vprime=exp(log(RNG_UNIF01())*ninv);
+      Vprime=exp(log(igraph_rng_get_unif01(rng))*ninv);
     }
         
     l+=S+1;
@@ -1156,15 +1155,14 @@ int igraph_random_sample(igraph_vector_t *res, igraph_real_t l, igraph_real_t h,
   if (n>1) {
     retval=igraph_i_random_sample_alga(res, (igraph_integer_t) l+1, 
 				       (igraph_integer_t) h, 
-				       (igraph_integer_t) n);
+				       (igraph_integer_t) n,
+                       rng);
   } else {
     retval=0;
     S=floor(N*Vprime);
     l+=S+1;
     igraph_vector_push_back(res, l);	/* allocated */
   }
-
-  RNG_END();
   
   return retval;
 }

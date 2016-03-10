@@ -83,7 +83,7 @@ int error_test() {
   n = 2;
   for (i = 0; i < n; i++) {
     test = all_checks[i];
-    ret = igraph_random_sample(&V, test->low, test->high, test->length);
+    ret = igraph_random_sample(&V, test->low, test->high, test->length, igraph_rng_default());
     if (ret != test->retval) {
       printf("Error test no. %d failed.\n", (int)(i + 1));
       return IGRAPH_FAILURE;
@@ -124,7 +124,7 @@ int random_sample_test() {
   do {
     length = (igraph_integer_t)R_INTEGER(1, max);
   } while (length > poolsize);
-  igraph_random_sample(&V, low, high, length);
+  igraph_random_sample(&V, low, high, length, igraph_rng_default());
   if (length != igraph_vector_size(&V)) {
     printf("Requested vector length and resulting length mismatch.\n");
     return IGRAPH_FAILURE;
@@ -149,7 +149,7 @@ int random_sample_test() {
   do {
     length = (igraph_integer_t)R_INTEGER(low, max);
   } while (length > poolsize);
-  igraph_random_sample(&V, low, high, length);
+  igraph_random_sample(&V, low, high, length, igraph_rng_default());
   /* Use Gauss' formula to sum all consecutive positive integers from 1 */
   /* up to and including an upper limit. In LaTeX, Gauss' formula is */
   /* \sum_{i=1}^n i = \frac{n(n+1)}{2} where n is the upper limit. */
@@ -170,15 +170,15 @@ int equal_test() {
 
   igraph_vector_init(&V, 0);
 
-  igraph_random_sample(&V, 0, 0, 1);
+  igraph_random_sample(&V, 0, 0, 1, igraph_rng_default());
   if (igraph_vector_size(&V) != 1) { return 1; }
   if (VECTOR(V)[0] != 0) { return 2; }
 
-  igraph_random_sample(&V, 10, 10, 1);
+  igraph_random_sample(&V, 10, 10, 1, igraph_rng_default());
   if (igraph_vector_size(&V) != 1) { return 3; }
   if (VECTOR(V)[0] != 10) { return 4; }
   
-  igraph_random_sample(&V, 2, 12, 11);
+  igraph_random_sample(&V, 2, 12, 11, igraph_rng_default());
   if (igraph_vector_size(&V) != 11) { return 5; }
   for (i = 0; i < 11; i++)
     if (VECTOR(V)[i] != i+2) { return 6; }
@@ -192,11 +192,11 @@ int rare_test() {
 
   igraph_vector_init(&V, 0);
 
-  igraph_random_sample(&V, 0, 0, 1);
+  igraph_random_sample(&V, 0, 0, 1, igraph_rng_default());
   if (igraph_vector_size(&V) != 1) { return 1; }
   if (VECTOR(V)[0] != 0) { return 2; }
 
-  igraph_random_sample(&V, 10, 10, 1);
+  igraph_random_sample(&V, 10, 10, 1, igraph_rng_default());
   if (igraph_vector_size(&V) != 1) { return 3; }
   if (VECTOR(V)[0] != 10) { return 4; }
   

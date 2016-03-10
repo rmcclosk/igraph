@@ -114,7 +114,7 @@ int main() {
 /*   igraph_destroy(&g); */
 
 /*   igraph_erdos_renyi_game(&g, IGRAPH_ERDOS_RENYI_GNP, */
-/* 			  2000, 100.0/2000, 0, 0); */
+/* 			  2000, 100.0/2000, 0, 0, igraph_rng_default()); */
 /*   n=igraph_ecount(&g); */
 /*   for (i=0; i<n; i++) { */
 /*     igraph_edge(&g, i, &from, &to); */

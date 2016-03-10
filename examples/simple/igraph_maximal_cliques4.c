@@ -66,7 +66,7 @@ int main() {
   igraph_rng_seed(igraph_rng_default(), 42);
   igraph_erdos_renyi_game(&graph, IGRAPH_ERDOS_RENYI_GNP,
   			  /*n=*/ 100, /*p=*/ 0.5, /*directed=*/ 0,
-  			  /*loops=*/ 0);
+  			  /*loops=*/ 0, igraph_rng_default());
 
   igraph_vector_ptr_init(&cliques, 0);
   

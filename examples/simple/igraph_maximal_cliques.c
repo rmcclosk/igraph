@@ -87,7 +87,7 @@ int main() {
   
   igraph_vector_init_seq(&perm, 0, NODES-1);
   igraph_erdos_renyi_game(&g, IGRAPH_ERDOS_RENYI_GNM, NODES, NODES, 
-        /*directed=*/ 0, /*loops=*/ 0);
+        /*directed=*/ 0, /*loops=*/ 0, igraph_rng_default());
   igraph_full(&cli, CLIQUE_SIZE, /*directed=*/ 0, /*loops=*/ 0);
 
   for (i=0; i<NO_CLIQUES; i++) {

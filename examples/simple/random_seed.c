@@ -32,12 +32,14 @@ int main() {
   igraph_rng_seed(igraph_rng_default(), 1122);
   
   igraph_erdos_renyi_game(&g1, IGRAPH_ERDOS_RENYI_GNP, 
-			  100, 3.0/100, /*directed=*/ 0, /*loops=*/ 0);
+			  100, 3.0/100, /*directed=*/ 0, /*loops=*/ 0,
+              igraph_rng_default());
   
   igraph_rng_seed(igraph_rng_default(), 1122);
   
   igraph_erdos_renyi_game(&g2, IGRAPH_ERDOS_RENYI_GNP, 
-			  100, 3.0/100, /*directed=*/ 0, /*loops=*/ 0);
+			  100, 3.0/100, /*directed=*/ 0, /*loops=*/ 0,
+              igraph_rng_default());
 
   igraph_isomorphic(&g1, &g2, &iso);
   
