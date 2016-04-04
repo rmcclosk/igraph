@@ -1,6 +1,8 @@
 
 EXTRA_DIST = $(TESTSUITE_AT) $(top_builddir)/tests/testsuite
 
+BUILT_SOURCES = ../include/igraph_version.h
+
 MAINTAINERCLEANFILES = Makefile.in $(TESTSUITE) package.m4 atconfig
 
 $(srcdir)/package.m4: $(top_srcdir)/configure.ac
