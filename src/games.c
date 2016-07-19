@@ -3521,13 +3521,15 @@ int igraph_static_fitness_game(igraph_t *graph, igraph_integer_t no_of_edges,
                 igraph_vector_t* fitness_out, igraph_vector_t* fitness_in,
                 igraph_bool_t loops, igraph_bool_t multiple) {
   igraph_vector_t edges=IGRAPH_VECTOR_NULL;
-  igraph_integer_t no_of_nodes;
+  igraph_integer_t no_of_nodes, max_no_of_edges;
+  igraph_integer_t outnodes, innodes, nodes;
   igraph_vector_t cum_fitness_in, cum_fitness_out;
   igraph_vector_t *p_cum_fitness_in, *p_cum_fitness_out;
   igraph_real_t x, max_in, max_out;
   igraph_bool_t is_directed = (fitness_in != 0);
   float num_steps;
-  long int from, to, pos;
+  igraph_integer_t step_counter = 0;
+  long int i, from, to, pos;
 
   if (fitness_out == 0) {
     IGRAPH_ERROR("fitness_out must not be null", IGRAPH_EINVAL);
@@ -3542,6 +3544,10 @@ int igraph_static_fitness_game(igraph_t *graph, igraph_integer_t no_of_edges,
     IGRAPH_CHECK(igraph_empty(graph, 0, is_directed));
     return IGRAPH_SUCCESS;
   }
+  
+  if (is_directed && igraph_vector_size(fitness_in) != no_of_nodes) {
+    IGRAPH_ERROR("fitness_in must have the same size as fitness_out", IGRAPH_EINVAL);
+  }
 
   /* Sanity checks for the fitnesses */
   if (igraph_vector_min(fitness_out) < 0) {
@@ -3549,6 +3555,31 @@ int igraph_static_fitness_game(igraph_t *graph, igraph_integer_t no_of_edges,
   }
   if (fitness_in != 0 && igraph_vector_min(fitness_in) < 0) {
     IGRAPH_ERROR("Fitness scores must be non-negative", IGRAPH_EINVAL);
+  }
+  
+  /* Avoid getting into an infinite loop when too many edges are requested */
+  if (!multiple) {
+    if (is_directed) {
+      outnodes = innodes = nodes = 0;
+      for (i=0; i < no_of_nodes; i++) {
+        if (VECTOR(*fitness_out)[i] != 0)
+            outnodes++;
+        if (VECTOR(*fitness_in)[i] != 0)
+            innodes++;
+        if (VECTOR(*fitness_out)[i] != 0 && VECTOR(*fitness_in)[i] != 0)
+            nodes++;
+      }
+      max_no_of_edges = outnodes * innodes - (loops ? 0 : nodes);
+    } else {
+      nodes = 0;
+      for (i=0; i < no_of_nodes; i++) {
+        if (VECTOR(*fitness_out)[i] != 0)
+          nodes++;
+      }
+      max_no_of_edges = loops ? nodes*(nodes+1)/2 : nodes*(nodes-1)/2;
+    }
+    if (no_of_edges > max_no_of_edges)
+      IGRAPH_ERROR("Too many edges requested", IGRAPH_EINVAL);
   }
 
   /* Calculate the cumulative fitness scores */
@@ -3576,7 +3607,7 @@ int igraph_static_fitness_game(igraph_t *graph, igraph_integer_t no_of_edges,
 
     while (no_of_edges > 0) {
       /* Report progress after every 10000 edges */
-      if (no_of_edges % 10000 == 0) {
+      if ((step_counter++) % 10000 == 0) {
         IGRAPH_PROGRESS("Static fitness game", 100.0*(1 - no_of_edges/num_steps), NULL);
         IGRAPH_ALLOW_INTERRUPTION();
       }
@@ -3611,7 +3642,7 @@ int igraph_static_fitness_game(igraph_t *graph, igraph_integer_t no_of_edges,
     IGRAPH_FINALLY(igraph_adjlist_destroy, &al);
     while (no_of_edges > 0) {
       /* Report progress after every 10000 edges */
-      if (no_of_edges % 10000 == 0) {
+      if ((step_counter++) % 10000 == 0) {
         IGRAPH_PROGRESS("Static fitness game", 100.0*(1 - no_of_edges/num_steps), NULL);
         IGRAPH_ALLOW_INTERRUPTION();
       }
