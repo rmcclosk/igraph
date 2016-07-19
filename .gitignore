@@ -16,27 +16,16 @@
 /Makefile
 /src/Makefile
 /doc/Makefile
-/Makefile.in
-/src/Makefile.in
-/doc/Makefile.in
 /debian/Makefile
-/debian/Makefile.in
 /doc/Makefile
-/doc/Makefile.in
 /doc/book/Makefile
-/doc/book/Makefile.in
 /src/Makefile
-/src/Makefile.in
 /tests/Makefile
-/tests/Makefile.in
 /interfaces/Makefile
-/interfaces/Makefile.in
 /interfaces/R/Makefile
-/interfaces/R/Makefile.in
 /interfaces/R/object_files
 /interfaces/R/version_number
 /interfaces/shell/Makefile
-/interfaces/shell/Makefile.in
 
 /src/*.o
 /src/AMD/Source/*.o
@@ -85,12 +74,9 @@
 /interfaces/java/src/java/StarMode.java
 /interfaces/java/reports
 /interfaces/java/autom4te.cache
-/interfaces/java/configure
 
 /interfaces/R/DESCRIPTION
 /interfaces/R/igraph/autom4te.cache
-/interfaces/R/configure
-/interfaces/R/configure.in
 /interfaces/R/src/Makevars.win
 /interfaces/R/src/config.h.in
 /interfaces/R/arpack/stamp
@@ -101,7 +87,6 @@
 /interfaces/R/igraph/NAMESPACE
 /interfaces/R/igraph/config.log
 /interfaces/R/igraph/config.status
-/interfaces/R/igraph/configure
 /interfaces/R/igraph/R/config.R
 /interfaces/R/igraph/R/auto.R
 /interfaces/R/igraph/src/*.cpp
@@ -144,7 +129,6 @@
 /interfaces/R/igraph/src/dvout.f
 /interfaces/R/igraph/src/ivout.f
 /interfaces/R/igraph/src/second.f
-/interfaces/R/igraph/configure.in
 /interfaces/R/igraph/src/glpk/glpapi.h
 /interfaces/R/igraph/src/glpk/glpavl.h
 /interfaces/R/igraph/src/glpk/glpbfd.h
