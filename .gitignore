@@ -8,6 +8,8 @@
 .libs
 .deps
 
+config.h.in~
+
 /autom4te.cache
 /build
 /igraph.msvc
