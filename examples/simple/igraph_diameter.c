@@ -37,10 +37,12 @@ int main() {
   igraph_integer_t result;
   igraph_integer_t from, to;
   igraph_vector_t path;
+  igraph_rng_t rng;
+  igraph_rng_init(&rng, &igraph_rngtype_mt19937);
   
   igraph_barabasi_game(&g, 30, /*power=*/ 1, 30, 0, 0, /*A=*/ 1, 
 		       IGRAPH_DIRECTED, IGRAPH_BARABASI_BAG, 
-		       /*start_from=*/ 0);
+		       /*start_from=*/ 0, &rng);
   igraph_diameter(&g, &result, 0, 0, 0, IGRAPH_UNDIRECTED, 1);
   
 /*   printf("Diameter: %li\n", (long int) result); */
@@ -56,6 +58,7 @@ int main() {
   
   igraph_vector_destroy(&path);
   igraph_destroy(&g);
+  igraph_rng_destroy(&rng);
 
   return 0;
 }

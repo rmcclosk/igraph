@@ -67,6 +67,8 @@ int main() {
 
   igraph_real_t nontriv_res[] = { 20, 0, 0, 0, 0, 19, 80, 85, 32, 0, 10, 
 				  75, 70, 0, 36, 81, 60, 0, 19, 19, 86 };
+  igraph_rng_t rng;
+  igraph_rng_init(&rng, &igraph_rngtype_mt19937);
 
   /*******************************************************/
 
@@ -79,7 +81,7 @@ int main() {
 		       /* A= */        1,
 		       /* directed= */ 0, 
 		       /* algo= */     IGRAPH_BARABASI_BAG,
-		       /* start_from= */ 0);
+		       /* start_from= */ 0, &rng);
   
   igraph_simplify(&g, /* multiple= */ 1, /* loops= */ 1, /*edge_comb=*/ 0);
   
@@ -200,6 +202,7 @@ int main() {
   igraph_destroy(&g);
 
   if (IGRAPH_FINALLY_STACK_SIZE() != 0) return 3;
+  igraph_rng_destroy(&rng);
 
   return 0;
 }

@@ -42,6 +42,10 @@ int check_simple() {
   long int r, e, ecount;
   igraph_vector_t eids, pairs, path;
 
+  igraph_rng_t igraph_rng;
+  igraph_rng_init(&igraph_rng, &igraph_rngtype_mt19937);
+  igraph_rng_seed(&igraph_rng, time(0));
+
   srand(time(0));
 
   igraph_vector_init(&pairs, edges*2);
@@ -50,7 +54,7 @@ int check_simple() {
 
   for (r=0; r<runs; r++) {
     igraph_erdos_renyi_game(&g, IGRAPH_ERDOS_RENYI_GNP, nodes, p, 
-			    /*directed=*/ 0, /*loops=*/ 0, igraph_rng_default());
+			    /*directed=*/ 0, /*loops=*/ 0, &igraph_rng);
     ecount=igraph_ecount(&g);
     for (e=0; e<edges; e++) {
       long int edge=RNG_INTEGER(0, ecount-1);
@@ -94,6 +98,7 @@ int check_simple() {
     igraph_destroy(&g);
   }
 
+  igraph_rng_destroy(&igraph_rng);
   igraph_vector_destroy(&path);
   igraph_vector_destroy(&pairs);
   igraph_vector_destroy(&eids);

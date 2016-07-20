@@ -28,6 +28,8 @@ int main() {
   igraph_t g;
   igraph_vs_t vertices;
   igraph_vector_t result1, result2;
+  igraph_rng_t rng;
+  igraph_rng_init(&rng, &igraph_rngtype_mt19937);
 
   igraph_rng_seed(igraph_rng_default(), 42);
   
@@ -35,7 +37,7 @@ int main() {
   igraph_vector_init(&result2, 0);
 
   igraph_erdos_renyi_game(&g, IGRAPH_ERDOS_RENYI_GNP, 100, .1,
-			  IGRAPH_UNDIRECTED, IGRAPH_NO_LOOPS);
+			  IGRAPH_UNDIRECTED, IGRAPH_NO_LOOPS, &rng);
 
   igraph_vs_seq(&vertices, 0, 99);
 
@@ -54,6 +56,7 @@ int main() {
   igraph_vector_destroy(&result2);
   igraph_vs_destroy(&vertices);
   igraph_destroy(&g);
+  igraph_rng_destroy(&rng);
   
   return 0;
 }

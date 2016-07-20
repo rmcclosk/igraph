@@ -80,8 +80,8 @@ extern igraph_real_t igraph_pajek_get_number(const char *str, long int len);
 %}
 
 %pure-parser
-%output="y.tab.c"
-%name-prefix="igraph_dl_yy"
+%output "y.tab.c"
+%name-prefix "igraph_dl_yy"
 %defines
 %locations
 %error-verbose

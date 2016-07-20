@@ -41,6 +41,8 @@ int main() {
 		    3,4,4,5,5,6,
 		    8,9,9,10 };
   igraph_vector_t v;
+  igraph_rng_t rng;
+  igraph_rng_init(&rng, &igraph_rngtype_mt19937);
 
   /* A ring, a single component */
   igraph_ring(&ring, 10, IGRAPH_UNDIRECTED, 0, 1);
@@ -53,7 +55,7 @@ int main() {
   
   /* random graph with a giant component */
   igraph_erdos_renyi_game(&g, IGRAPH_ERDOS_RENYI_GNP, 100, 4.0/100, 
-			  IGRAPH_UNDIRECTED, 0, igraph_rng_default());
+			  IGRAPH_UNDIRECTED, 0, &rng);
   igraph_decompose(&g, &complist, IGRAPH_WEAK, -1, 20);
   if (igraph_vector_ptr_size(&complist) != 1) { 
     return 1;
@@ -98,6 +100,7 @@ int main() {
 /*   igraph_destroy(&g);   */
   
   igraph_vector_ptr_destroy(&complist);
+  igraph_rng_destroy(&rng);
 
   return 0;
 }

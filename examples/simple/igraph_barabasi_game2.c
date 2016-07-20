@@ -29,6 +29,9 @@ int main() {
   igraph_t g;
   igraph_bool_t simple;
 
+  igraph_rng_t rng;
+  igraph_rng_init(&rng, &igraph_rngtype_mt19937);
+
   igraph_barabasi_game(/* graph=    */ &g, 
 		       /* n=        */ 100,
 		       /* power=    */ 1.0,
@@ -38,7 +41,8 @@ int main() {
 		       /* A=        */ 1.0,
 		       /* directed= */ IGRAPH_DIRECTED,
 		       /* algo=     */ IGRAPH_BARABASI_PSUMTREE,
-		       /* start_from= */ 0);
+		       /* start_from= */ 0,
+               /* rng=      */ &rng);
   
   if (igraph_ecount(&g) != 197) { return 1; }
   if (igraph_vcount(&g) != 100) { return 2; }
@@ -58,7 +62,8 @@ int main() {
 		       /* A=        */ 1.0,
 		       /* directed= */ IGRAPH_DIRECTED,
 		       /* algo=     */ IGRAPH_BARABASI_PSUMTREE_MULTIPLE,
-		       /* start_from= */ 0);
+		       /* start_from= */ 0,
+               /* rng=      */ &rng);
 
   if (igraph_ecount(&g) != 198) { return 4; }
   if (igraph_vcount(&g) != 100) { return 5; }
@@ -78,13 +83,15 @@ int main() {
 		       /* A=        */ 1.0,
 		       /* directed= */ IGRAPH_DIRECTED,
 		       /* algo=     */ IGRAPH_BARABASI_BAG,
-		       /* start_from= */ 0);
+		       /* start_from= */ 0,
+               /* rng=      */ &rng);
 
   if (igraph_ecount(&g) != 198) { return 7; }
   if (igraph_vcount(&g) != 100) { return 8; }
   igraph_is_simple(&g, &simple);
   if (simple) { return 9; }
   
+  igraph_rng_destroy(&rng);
   igraph_destroy(&g);    
   
   return 0;

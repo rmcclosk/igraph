@@ -27,14 +27,17 @@ int main() {
   
   igraph_t g;
   igraph_real_t result;
+  igraph_rng_t rng;
+  igraph_rng_init(&rng, &igraph_rngtype_mt19937);
   
   igraph_barabasi_game(&g, 30, /*power=*/ 1, 30, 0, 0, /*A=*/ 1, 
 		       IGRAPH_DIRECTED, IGRAPH_BARABASI_BAG,
-		       /*start_from=*/ 0);
+		       /*start_from=*/ 0, &rng);
   igraph_average_path_length(&g, &result, IGRAPH_UNDIRECTED, 1);
   
 /*   printf("Length of the average shortest paths: %f\n", (float) result); */
   
   igraph_destroy(&g);
+  igraph_rng_destroy(&rng);
   return 0;
 }

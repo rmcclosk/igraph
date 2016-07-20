@@ -75,8 +75,8 @@ igraph_real_t igraph_lgl_get_number(const char *str, long int len);
 %}
 
 %pure-parser
-%output="y.tab.c"
-%name-prefix="igraph_lgl_yy"
+%output "y.tab.c"
+%name-prefix "igraph_lgl_yy"
 %defines
 %locations
 %error-verbose

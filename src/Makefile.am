@@ -1,15 +1,13 @@
 # This is to make sure that the headers get built before they are included
 BUILT_SOURCES = foreign-ncol-parser.h foreign-lgl-parser.h \
 		foreign-dl-parser.h foreign-gml-parser.h \
-		foreign-pajek-parser.h \
-		../include/igraph_version.h \
-		../include/igraph_threading.h
+		foreign-pajek-parser.h
 
 # This is needed to ensure that yacc (or bison) builds the header files
 # Unfortunately this is not the default behaviour in MinGW/MSYS
 AM_YFLAGS = -d
 
-#lib_LTLIBRARIES         = libigraph.la
+noinst_LTLIBRARIES         = libigraph.la
 
 include lapack/blas.inc
 include lapack/lapack.inc
@@ -120,8 +118,8 @@ PRPACK_LIB = libprpack.la
 libplfit_la_SOURCES = $(PLFIT)
 PLFIT_LIB = libplfit.la
 
-noinst_LTLIBRARIES = $(F2C_LIB) $(BLAS_LIB) $(LAPACK_LIB) $(ARPACK_LIB) \
-					 $(GLPK_LIB) $(PLFIT_LIB) $(PRPACK_LIB) libigraph.la
+noinst_LTLIBRARIES += $(F2C_LIB) $(BLAS_LIB) $(LAPACK_LIB) $(ARPACK_LIB) \
+					 $(GLPK_LIB) $(PLFIT_LIB) $(PRPACK_LIB)
 
 CS = cs/cs_add.c       cs/cs_happly.c    cs/cs_pvec.c         \
 	cs/cs_amd.c       cs/cs_house.c     cs/cs_qr.c        \
@@ -391,7 +389,7 @@ else
   SOURCES += f2c/dummy.c
 endif
 
-libigraph_la_SOURCES       = $(SOURCES) $(HEADERS_PRIVATE) $(HEADERS_PUBLIC)
+libigraph_la_SOURCES       = $(SOURCES) $(HEADERS_PRIVATE)
 libigraph_la_CFLAGS        = -I$(top_srcdir)/include \
 			     -I$(top_builddir)/include \
 			     -I$(top_srcdir)/src/CHOLMOD/Include \
@@ -407,7 +405,7 @@ libigraph_la_CXXFLAGS	   = -I$(top_srcdir)/include -I$(top_builddir)/include $(W
 libigraph_la_LDFLAGS       = -no-undefined
 libigraph_la_LIBADD        = -lm $(XML2_LIBS) $(F2C_LIB) $(BLAS_LIB) \
 				 $(LAPACK_LIB) $(ARPACK_LIB) $(GLPK_LIB) $(PRPACK_LIB) \
-				 $(PLFIT_LIB) -lstdc++
+				 $(PLFIT_LIB)
 
 if INTERNAL_GLPK
   libigraph_la_CFLAGS   += -I$(top_srcdir)/optional/glpk
@@ -418,7 +416,7 @@ libigraph_la_CFLAGS += -I$(top_srcdir)/src/prpack -DPRPACK_IGRAPH_SUPPORT
 libigraph_la_CXXFLAGS += -I$(top_srcdir)/src/prpack -DPRPACK_IGRAPH_SUPPORT
 
 includedir = $(prefix)/include/igraph
-#include_HEADERS = $(HEADERS_PUBLIC)
+include_HEADERS = $(HEADERS_PUBLIC)
 
 MAINTAINERCLEANFILES = Makefile.in foreign-lgl-parser.h foreign-ncol-parser.h
 

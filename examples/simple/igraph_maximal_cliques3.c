@@ -61,11 +61,14 @@ int print_and_destroy(igraph_vector_ptr_t *cliques) {
 int main() {
   igraph_t graph;
   igraph_vector_ptr_t cliques;
+  igraph_rng_t rng;
+  igraph_rng_init(&rng, &igraph_rngtype_mt19937);
 
+  igraph_rng_seed(&rng, 42);
   igraph_rng_seed(igraph_rng_default(), 42);
   igraph_erdos_renyi_game(&graph, IGRAPH_ERDOS_RENYI_GNP,
   			  /*n=*/ 100, /*p=*/ 0.7, /*directed=*/ 0,
-  			  /*loops=*/ 0);
+  			  /*loops=*/ 0, &rng);
 
   igraph_vector_ptr_init(&cliques, 0);
   
@@ -74,6 +77,7 @@ int main() {
   
   print_and_destroy(&cliques);
   igraph_destroy(&graph);
+  igraph_rng_destroy(&rng);
 
   return 0;
 }

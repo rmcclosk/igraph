@@ -26,12 +26,14 @@
 
 int main() {
   igraph_t g1, g2;
+  igraph_rng_t rng;
+  igraph_rng_init(&rng, &igraph_rngtype_mt19937);
 
   igraph_erdos_renyi_game(&g1, IGRAPH_ERDOS_RENYI_GNP, 10, .3,
-			  IGRAPH_UNDIRECTED, IGRAPH_NO_LOOPS, 
-                          igraph_rng_default());
+                          IGRAPH_UNDIRECTED, IGRAPH_NO_LOOPS, &rng);
   igraph_correlated_game(&g1, &g2, .9, .3, /* permutation=*/ 0);
   
+  igraph_rng_destroy(&rng);
   igraph_destroy(&g2);
   igraph_destroy(&g1);
   

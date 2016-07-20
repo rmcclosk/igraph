@@ -14,6 +14,7 @@
 
 @SET_MAKE@
 
+
 VPATH = @srcdir@
 am__is_gnu_make = test -n '$(MAKEFILE_LIST)' && test -n '$(MAKELEVEL)'
 am__make_running_with_option = \
@@ -89,7 +90,8 @@ DIST_COMMON = $(srcdir)/lapack/blas.inc $(srcdir)/lapack/lapack.inc \
 	foreign-pajek-lexer.c foreign-gml-parser.h \
 	foreign-gml-parser.c foreign-gml-lexer.c foreign-dl-parser.h \
 	foreign-dl-parser.c foreign-dl-lexer.c \
-	$(top_srcdir)/build-aux/depcomp $(top_srcdir)/build-aux/ylwrap
+	$(top_srcdir)/build-aux/depcomp $(top_srcdir)/build-aux/ylwrap \
+	$(include_HEADERS)
 @INTERNAL_F2C_TRUE@am__append_1 = f2c/arith.h
 @INTERNAL_F2C_FALSE@am__append_2 = f2c/dummy.c
 @INTERNAL_GLPK_TRUE@am__append_3 = -I$(top_srcdir)/optional/glpk
@@ -643,45 +645,7 @@ am__libigraph_la_SOURCES_DIST = basic_query.c games.c cocitation.c \
 	triangles_template1.h maximal_cliques_template.h prpack.h \
 	igraph_cliquer.h cliquer/graph.h cliquer/cliquer.h \
 	cliquer/misc.h cliquer/cliquerconf.h cliquer/reorder.h \
-	cliquer/set.h ../include/igraph.h ../include/igraph_memory.h \
-	../include/igraph_random.h ../include/igraph_types.h \
-	../include/igraph_vector.h ../include/igraph_matrix.h \
-	../include/igraph_array.h ../include/igraph_dqueue.h \
-	../include/igraph_stack.h ../include/igraph_heap.h \
-	../include/igraph_arpack.h ../include/igraph_attributes.h \
-	../include/igraph_error.h ../include/igraph_pmt.h \
-	../include/igraph_pmt_off.h ../include/igraph_adjlist.h \
-	../include/igraph_iterators.h ../include/igraph_bipartite.h \
-	../include/igraph_layout.h ../include/igraph_centrality.h \
-	../include/igraph_motifs.h ../include/igraph_cliques.h \
-	../include/igraph_neighborhood.h \
-	../include/igraph_cocitation.h ../include/igraph_nongraph.h \
-	../include/igraph_community.h ../include/igraph_operators.h \
-	../include/igraph_components.h ../include/igraph_paths.h \
-	../include/igraph_constructors.h ../include/igraph_progress.h \
-	../include/igraph_conversion.h ../include/igraph_datatype.h \
-	../include/igraph_structural.h ../include/igraph_flow.h \
-	../include/igraph_topology.h ../include/igraph_foreign.h \
-	../include/igraph_transitivity.h ../include/igraph_games.h \
-	../include/igraph_visitor.h ../include/igraph_interface.h \
-	../include/igraph_constants.h ../include/igraph_vector_pmt.h \
-	../include/igraph_matrix_pmt.h ../include/igraph_array_pmt.h \
-	../include/igraph_dqueue_pmt.h ../include/igraph_stack_pmt.h \
-	../include/igraph_heap_pmt.h ../include/igraph_vector_ptr.h \
-	../include/igraph_spmatrix.h ../include/igraph_strvector.h \
-	../include/igraph_psumtree.h ../include/igraph_sparsemat.h \
-	../include/igraph_mixing.h ../include/igraph_version.h \
-	../include/igraph_blas.h ../include/igraph_separators.h \
-	../include/igraph_cohesive_blocks.h ../include/igraph_lapack.h \
-	../include/igraph_complex.h ../include/igraph_eigen.h \
-	../include/igraph_statusbar.h ../include/igraph_hrg.h \
-	../include/igraph_microscopic_update.h \
-	../include/igraph_interrupt.h ../include/igraph_threading.h \
-	../include/igraph_scg.h ../include/igraph_qsort.h \
-	../include/igraph_matching.h ../include/igraph_embedding.h \
-	../include/igraph_scan.h ../include/igraph_graphlets.h \
-	../include/igraph_vector_type.h ../include/igraph_epidemics.h \
-	../include/igraph_lsap.h
+	cliquer/set.h
 am__objects_5 = cs/libigraph_la-cs_add.lo cs/libigraph_la-cs_happly.lo \
 	cs/libigraph_la-cs_pvec.lo cs/libigraph_la-cs_amd.lo \
 	cs/libigraph_la-cs_house.lo cs/libigraph_la-cs_qr.lo \
@@ -868,8 +832,7 @@ am__objects_11 = libigraph_la-basic_query.lo libigraph_la-games.lo \
 	cliquer/libigraph_la-cliquer.lo cliquer/libigraph_la-graph.lo \
 	cliquer/libigraph_la-reorder.lo $(am__objects_10)
 am__objects_12 =
-am_libigraph_la_OBJECTS = $(am__objects_11) $(am__objects_12) \
-	$(am__objects_12)
+am_libigraph_la_OBJECTS = $(am__objects_11) $(am__objects_12)
 libigraph_la_OBJECTS = $(am_libigraph_la_OBJECTS)
 libigraph_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CXXLD) $(libigraph_la_CXXFLAGS) \
@@ -1066,6 +1029,35 @@ am__can_run_installinfo = \
     n|no|NO) false;; \
     *) (install-info --version) >/dev/null 2>&1;; \
   esac
+am__vpath_adj_setup = srcdirstrip=`echo "$(srcdir)" | sed 's|.|.|g'`;
+am__vpath_adj = case $$p in \
+    $(srcdir)/*) f=`echo "$$p" | sed "s|^$$srcdirstrip/||"`;; \
+    *) f=$$p;; \
+  esac;
+am__strip_dir = f=`echo $$p | sed -e 's|^.*/||'`;
+am__install_max = 40
+am__nobase_strip_setup = \
+  srcdirstrip=`echo "$(srcdir)" | sed 's/[].[^$$\\*|]/\\\\&/g'`
+am__nobase_strip = \
+  for p in $$list; do echo "$$p"; done | sed -e "s|$$srcdirstrip/||"
+am__nobase_list = $(am__nobase_strip_setup); \
+  for p in $$list; do echo "$$p $$p"; done | \
+  sed "s| $$srcdirstrip/| |;"' / .*\//!s/ .*/ ./; s,\( .*\)/[^/]*$$,\1,' | \
+  $(AWK) 'BEGIN { files["."] = "" } { files[$$2] = files[$$2] " " $$1; \
+    if (++n[$$2] == $(am__install_max)) \
+      { print $$2, files[$$2]; n[$$2] = 0; files[$$2] = "" } } \
+    END { for (dir in files) print dir, files[dir] }'
+am__base_list = \
+  sed '$$!N;$$!N;$$!N;$$!N;$$!N;$$!N;$$!N;s/\n/ /g' | \
+  sed '$$!N;$$!N;$$!N;$$!N;s/\n/ /g'
+am__uninstall_files_from_dir = { \
+  test -z "$$files" \
+    || { test ! -d "$$dir" && test ! -f "$$dir" && test ! -r "$$dir"; } \
+    || { echo " ( cd '$$dir' && rm -f" $$files ")"; \
+         $(am__cd) "$$dir" && rm -f $$files; }; \
+  }
+am__installdirs = "$(DESTDIR)$(includedir)"
+HEADERS = $(include_HEADERS)
 am__tagged_files = $(HEADERS) $(SOURCES) $(TAGS_FILES) $(LISP)
 # Read a list of newline-separated strings from the standard input,
 # and print each of them once, without duplicates.  Input order is
@@ -1228,12 +1220,13 @@ top_srcdir = @top_srcdir@
 # This is to make sure that the headers get built before they are included
 BUILT_SOURCES = foreign-ncol-parser.h foreign-lgl-parser.h \
 	foreign-dl-parser.h foreign-gml-parser.h \
-	foreign-pajek-parser.h ../include/igraph_version.h \
-	../include/igraph_threading.h $(am__append_1)
+	foreign-pajek-parser.h $(am__append_1)
 
 # This is needed to ensure that yacc (or bison) builds the header files
 # Unfortunately this is not the default behaviour in MinGW/MSYS
 AM_YFLAGS = -d
+noinst_LTLIBRARIES = libigraph.la $(F2C_LIB) $(BLAS_LIB) $(LAPACK_LIB) \
+	$(ARPACK_LIB) $(GLPK_LIB) $(PLFIT_LIB) $(PRPACK_LIB)
 BLAS = lapack/dscal.c lapack/dswap.c lapack/lsame.c lapack/dnrm2.c lapack/idamax.c lapack/daxpy.c lapack/dgemv.c lapack/dger.c lapack/dgemm.c lapack/dcopy.c lapack/dtrmm.c lapack/dtrmv.c lapack/drot.c lapack/ddot.c lapack/dasum.c lapack/dsymv.c lapack/dsyr2k.c lapack/dsyr2.c lapack/dtrsm.c lapack/dsyrk.c lapack/dtrsv.c 
 LAPACK = lapack/dgeev.c lapack/dgebak.c lapack/xerbla.c \
 	lapack/dgebal.c lapack/disnan.c lapack/dlaisnan.c \
@@ -1278,8 +1271,6 @@ PLFIT = plfit/error.c     plfit/gss.c       plfit/kolmogorov.c \
 		plfit/lbfgs.h     plfit/platform.h  plfit/plfit.h      \
 		plfit/zeta.h
 
-
-#lib_LTLIBRARIES         = libigraph.la
 F2C = f2c/abort_.c	  f2c/dolio.c	    f2c/r_sin.c\
 	f2c/dummy.c	  f2c/dtime_.c	    f2c/iio.c	      f2c/r_sinh.c\
 	f2c/backspac.c	  f2c/due.c	    f2c/ilnw.c	      f2c/r_sqrt.c\
@@ -1467,9 +1458,6 @@ libprpack_la_CPPFLAGS = -I$(top_srcdir)/include -DPRPACK_IGRAPH_SUPPORT
 PRPACK_LIB = libprpack.la
 libplfit_la_SOURCES = $(PLFIT)
 PLFIT_LIB = libplfit.la
-noinst_LTLIBRARIES = $(F2C_LIB) $(BLAS_LIB) $(LAPACK_LIB) $(ARPACK_LIB) \
-					 $(GLPK_LIB) $(PLFIT_LIB) $(PRPACK_LIB) libigraph.la
-
 CS = cs/cs_add.c       cs/cs_happly.c    cs/cs_pvec.c         \
 	cs/cs_amd.c       cs/cs_house.c     cs/cs_qr.c        \
 	cs/cs_chol.c      cs/cs_ipvec.c     cs/cs_qrsol.c     \
@@ -1701,7 +1689,7 @@ SOURCES = basic_query.c games.c cocitation.c iterators.c \
 	layout_dh.c lsap.c layout_fr.c layout_kk.c paths.c \
 	random_walk.c igraph_cliquer.c cliquer/cliquer.c \
 	cliquer/graph.c cliquer/reorder.c $(am__append_2)
-libigraph_la_SOURCES = $(SOURCES) $(HEADERS_PRIVATE) $(HEADERS_PUBLIC)
+libigraph_la_SOURCES = $(SOURCES) $(HEADERS_PRIVATE)
 libigraph_la_CFLAGS = -I$(top_srcdir)/include \
 	-I$(top_builddir)/include -I$(top_srcdir)/src/CHOLMOD/Include \
 	-I$(top_builddir)/src/CHOLMOD/Include \
@@ -1719,9 +1707,9 @@ libigraph_la_CXXFLAGS = -I$(top_srcdir)/include \
 libigraph_la_LDFLAGS = -no-undefined
 libigraph_la_LIBADD = -lm $(XML2_LIBS) $(F2C_LIB) $(BLAS_LIB) \
 				 $(LAPACK_LIB) $(ARPACK_LIB) $(GLPK_LIB) $(PRPACK_LIB) \
-				 $(PLFIT_LIB) -lstdc++
+				 $(PLFIT_LIB)
 
-#include_HEADERS = $(HEADERS_PUBLIC)
+include_HEADERS = $(HEADERS_PUBLIC)
 MAINTAINERCLEANFILES = Makefile.in foreign-lgl-parser.h foreign-ncol-parser.h
 all: $(BUILT_SOURCES)
 	$(MAKE) $(AM_MAKEFLAGS) all-am
@@ -8982,6 +8970,27 @@ clean-libtool:
 	-rm -rf lapack/.libs lapack/_libs
 	-rm -rf plfit/.libs plfit/_libs
 	-rm -rf prpack/.libs prpack/_libs
+install-includeHEADERS: $(include_HEADERS)
+	@$(NORMAL_INSTALL)
+	@list='$(include_HEADERS)'; test -n "$(includedir)" || list=; \
+	if test -n "$$list"; then \
+	  echo " $(MKDIR_P) '$(DESTDIR)$(includedir)'"; \
+	  $(MKDIR_P) "$(DESTDIR)$(includedir)" || exit 1; \
+	fi; \
+	for p in $$list; do \
+	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
+	  echo "$$d$$p"; \
+	done | $(am__base_list) | \
+	while read files; do \
+	  echo " $(INSTALL_HEADER) $$files '$(DESTDIR)$(includedir)'"; \
+	  $(INSTALL_HEADER) $$files "$(DESTDIR)$(includedir)" || exit $$?; \
+	done
+
+uninstall-includeHEADERS:
+	@$(NORMAL_UNINSTALL)
+	@list='$(include_HEADERS)'; test -n "$(includedir)" || list=; \
+	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
+	dir='$(DESTDIR)$(includedir)'; $(am__uninstall_files_from_dir)
 
 ID: $(am__tagged_files)
 	$(am__define_uniq_tagged_files); mkid -fID $$unique
@@ -9068,8 +9077,11 @@ distdir: $(DISTFILES)
 check-am: all-am
 check: $(BUILT_SOURCES)
 	$(MAKE) $(AM_MAKEFLAGS) check-am
-all-am: Makefile $(LTLIBRARIES)
+all-am: Makefile $(LTLIBRARIES) $(HEADERS)
 installdirs:
+	for dir in "$(DESTDIR)$(includedir)"; do \
+	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
+	done
 install: $(BUILT_SOURCES)
 	$(MAKE) $(AM_MAKEFLAGS) install-am
 install-exec: install-exec-am
@@ -9181,7 +9193,7 @@ info: info-am
 
 info-am:
 
-install-data-am:
+install-data-am: install-includeHEADERS
 
 install-dvi: install-dvi-am
 
@@ -9227,7 +9239,7 @@ ps: ps-am
 
 ps-am:
 
-uninstall-am:
+uninstall-am: uninstall-includeHEADERS
 
 .MAKE: all check install install-am install-strip
 
@@ -9237,13 +9249,14 @@ uninstall-am:
 	distclean-libtool distclean-tags distdir dvi dvi-am html \
 	html-am info info-am install install-am install-data \
 	install-data-am install-dvi install-dvi-am install-exec \
-	install-exec-am install-html install-html-am install-info \
-	install-info-am install-man install-pdf install-pdf-am \
-	install-ps install-ps-am install-strip installcheck \
-	installcheck-am installdirs maintainer-clean \
-	maintainer-clean-generic mostlyclean mostlyclean-compile \
-	mostlyclean-generic mostlyclean-libtool pdf pdf-am ps ps-am \
-	tags tags-am uninstall uninstall-am
+	install-exec-am install-html install-html-am \
+	install-includeHEADERS install-info install-info-am \
+	install-man install-pdf install-pdf-am install-ps \
+	install-ps-am install-strip installcheck installcheck-am \
+	installdirs maintainer-clean maintainer-clean-generic \
+	mostlyclean mostlyclean-compile mostlyclean-generic \
+	mostlyclean-libtool pdf pdf-am ps ps-am tags tags-am uninstall \
+	uninstall-am uninstall-includeHEADERS
 
 @INTERNAL_F2C_TRUE@  f2c/arith.h: f2c/arithchk.c
 @INTERNAL_F2C_TRUE@	$(CC) $(CFLAGS) -DNO_FPINIT f2c/arithchk.c -lm -o f2c/arith || \

@@ -28,9 +28,11 @@ int main() {
   igraph_t g;
   igraph_vector_t v, v2;
   int i, ret;
+  igraph_rng_t rng;
+  igraph_rng_init(&rng, &igraph_rngtype_mt19937);
   
   igraph_barabasi_game(&g, 10, /*power=*/ 1, 2, 0, 0, /*A=*/ 1, 1, 
-		       IGRAPH_BARABASI_BAG, /*start_from=*/ 0);
+		       IGRAPH_BARABASI_BAG, /*start_from=*/ 0, &rng);
   if (igraph_ecount(&g) != 18) {
     return 1;
   }
@@ -59,7 +61,7 @@ int main() {
   VECTOR(v)[8]=8; VECTOR(v)[9]=9;
   
   igraph_barabasi_game(&g, 10, /*power=*/ 1, 0, &v, 0, /*A=*/ 1, 1, 
-		       IGRAPH_BARABASI_BAG, /*start_from=*/ 0);
+		       IGRAPH_BARABASI_BAG, /*start_from=*/ 0, &rng);
   if (igraph_ecount(&g) != igraph_vector_sum(&v)) {
     return 5;
   }
@@ -80,7 +82,7 @@ int main() {
   /* outpref, we cannot really test this quantitatively,
      would need to set random seed */
   igraph_barabasi_game(&g, 10, /*power=*/ 1, 2, 0, 1, /*A=*/ 1, 1,
-		       IGRAPH_BARABASI_BAG, /*start_from=*/ 0);
+		       IGRAPH_BARABASI_BAG, /*start_from=*/ 0, &rng);
   igraph_vector_init(&v, 0);
   igraph_get_edgelist(&g, &v, 0);
   for (i=0; i<igraph_ecount(&g); i++) {
@@ -97,22 +99,23 @@ int main() {
   /* Error tests */
   igraph_set_error_handler(igraph_error_handler_ignore);
   ret=igraph_barabasi_game(&g, -10, /*power=*/ 1, 1, 0, 0, /*A=*/ 1, 0, 
-			   IGRAPH_BARABASI_BAG, /*start_from=*/ 0);
+			   IGRAPH_BARABASI_BAG, /*start_from=*/ 0, &rng);
   if (ret != IGRAPH_EINVAL) {
     return 9;
   }
   ret=igraph_barabasi_game(&g, 10, /*power=*/ 1, -2, 0, 0, /*A=*/ 1, 0,
-			   IGRAPH_BARABASI_BAG, /*start_from=*/ 0);
+			   IGRAPH_BARABASI_BAG, /*start_from=*/ 0, &rng);
   if (ret != IGRAPH_EINVAL) {
     return 10;
   }
   igraph_vector_init(&v, 9);
   ret=igraph_barabasi_game(&g, 10, /*power=*/ 1, 0, &v, 0, /*A=*/ 1, 0,
-			   IGRAPH_BARABASI_BAG, /*start_from=*/ 0);
+			   IGRAPH_BARABASI_BAG, /*start_from=*/ 0, &rng);
   if (ret != IGRAPH_EINVAL) {
     return 11;
   }
   igraph_vector_destroy(&v);
+  igraph_rng_destroy(&rng);
   
   return 0;
 }

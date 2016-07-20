@@ -27,19 +27,22 @@ int main() {
   igraph_t graph;
   igraph_matrix_t coords;
   int i;
+  igraph_rng_t rng;
+  igraph_rng_init(&rng, &igraph_rngtype_mt19937);
 
   igraph_matrix_init(&coords, 0, 0);
 
   for (i=0; i<10; i++) {
     igraph_erdos_renyi_game(&graph, IGRAPH_ERDOS_RENYI_GNP, /*n=*/ 100, 
-			    /*p=*/ 2.0/100, IGRAPH_UNDIRECTED, /*loops=*/ 0,
-                igraph_rng_default());
+                /*p=*/ 2.0/100, IGRAPH_UNDIRECTED, /*loops=*/ 0,
+                &rng);
     igraph_layout_mds(&graph, &coords, /*dist=*/ 0, /*dim=*/ 2,
 		      /*options=*/ 0);
     igraph_destroy(&graph);
   }
   
   igraph_matrix_destroy(&coords);
+  igraph_rng_destroy(&rng);
 	 
   return 0;
 }
