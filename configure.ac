@@ -184,7 +184,7 @@ if test "x$enable_gmp" != "xno"; then
 fi
 AC_LANG_POP([C++])
 
-tls_support=no
+tls_support=yes
 HAVE_TLS=0
 THREAD_LOCAL=
 AC_ARG_ENABLE(tls, AC_HELP_STRING([--enable-tls], [Compile with thread-local storage]))
