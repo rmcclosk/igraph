@@ -8,7 +8,15 @@
 .libs
 .deps
 
+config.h
 config.h.in~
+config.log
+config.status
+igraph.pc
+igraph_Info.plist
+libtool
+stamp-h1
+
 
 /autom4te.cache
 /build
